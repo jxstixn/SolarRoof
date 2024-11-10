@@ -50,7 +50,7 @@ export default function Nav() {
                     </Link>
                     <span
                         className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
-                            (path === "/marketplace" ? " group:w-full" : "")}>
+                            (path === "/marketplace" ? " w-full" : "")}>
                     </span>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex relative group">
