@@ -8,7 +8,7 @@ export default function Home() {
             {/* First Image - Slide in from the left */}
             <div
                 className="hidden md:block absolute md:-left-[12rem] xl:-left-[3rem] top-1/3 rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-left"
+               opacity-0 animate-fade-in-left transition-all"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -24,7 +24,7 @@ export default function Home() {
             {/* Second Image - Slide in from the top */}
             <div
                 className="hidden md:block absolute md:left-52 xl:left-1/3 md:-top-[12rem] xl:-top-[8rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-down"
+               opacity-0 animate-fade-in-down transition-all"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -40,7 +40,7 @@ export default function Home() {
             {/* Third Image - Slide in from the bottom */}
             <div
                 className="hidden md:block absolute md:right-8 xl:right-16 -bottom-[12rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-up"
+               opacity-0 animate-fade-in-up transition-all"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105

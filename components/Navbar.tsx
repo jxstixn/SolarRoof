@@ -1,21 +1,40 @@
 "use client"
-
-import {usePathname} from "next/navigation";
+import React from "react";
+import {
+    Navbar,
+    NavbarBrand,
+    NavbarContent,
+    NavbarItem,
+    NavbarMenuToggle,
+    NavbarMenu,
+    NavbarMenuItem,
+} from "@nextui-org/react";
 import Link from "next/link";
+import {usePathname} from "next/navigation";
 
-function Navbar() {
+export default function Nav() {
     const path = usePathname();
+    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     return (
-        <nav
-            className={"flex w-full h-[104px] bg-[#ebece7] text-zinc-800 text-lg px-8 py-6 items-center justify-between"}>
-            <div className={"flex flex-row text-2xl items-center font-bold italic"}>
-                {/*<Logo width={40} height={40}/>*/}
-                {/*<span className={"ml-4 text-yellow-500"}>SOLAR</span>*/}
-                {/*<span className={"text-[#0e4155]"}>ROOF</span>*/}
-            </div>
-            <ul className={"flex flex-row items-center gap-16"}>
-                <div className={"relative group"}>
+        <Navbar onMenuOpenChange={setIsMenuOpen} isBlurred={false}
+                className={"bg-transparent w-full max-w-full px-8 py-6"} classNames={{
+            wrapper: "max-w-full p-0",
+        }}>
+            <NavbarContent className={"justify-between"}>
+                <NavbarBrand>
+                    <p className="font-bold text-inherit">
+                        SolarRoof
+                    </p>
+                </NavbarBrand>
+                <NavbarMenuToggle
+                    aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                    className="lg:hidden"
+                />
+            </NavbarContent>
+
+            <NavbarContent className={"hidden lg:flex transition-all gap-8 xl:gap-16"} justify="end">
+                <NavbarItem className="hidden lg:flex relative group">
                     <Link href={"/"}>
                         Home
                     </Link>
@@ -23,9 +42,8 @@ function Navbar() {
                         className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
                             (path === "/" ? " w-full" : "")}>
                     </span>
-                </div>
-                <div className={"relative group"}>
-
+                </NavbarItem>
+                <NavbarItem className="hidden lg:flex relative group">
                     <Link href={"/marketplace"}>
                         Marketplace
                     </Link>
@@ -33,16 +51,28 @@ function Navbar() {
                         className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
                             (path === "/marketplace" ? " w-full" : "")}>
                     </span>
-                </div>
-                <Link href={"/contact"}
-                      className={"rounded-full font-semibold w-36 h-14 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
-                          "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
-                          "hover:transform hover:scale-105"}>
-                    Apply Now!
-                </Link>
-            </ul>
-        </nav>
-    )
+                </NavbarItem>
+                <NavbarItem className="hidden lg:flex relative group">
+                    <Link href={"/contact"}
+                          className={"rounded-full font-semibold w-36 h-14 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
+                              "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
+                              "hover:transform hover:scale-105 text-lg"}>
+                        Apply Now!
+                    </Link>
+                </NavbarItem>
+            </NavbarContent>
+            <NavbarMenu className={"bg-[#ebece7] p-8 text-end"}>
+                <NavbarMenuItem key={"Home"}>
+                    <Link href={"/"}>
+                        Home
+                    </Link>
+                </NavbarMenuItem>
+                <NavbarMenuItem key={"Marketplace"}>
+                    <Link href={"/marketplace"}>
+                        Marketplace
+                    </Link>
+                </NavbarMenuItem>
+            </NavbarMenu>
+        </Navbar>
+    );
 }
-
-export default Navbar;
