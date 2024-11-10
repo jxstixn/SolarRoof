@@ -2,11 +2,9 @@
 
 import {usePathname} from "next/navigation";
 import Link from "next/link";
-import Logo from "@/components/icons/Logo";
 
 function Navbar() {
     const path = usePathname();
-    console.log(path);
 
     return (
         <nav
@@ -22,7 +20,9 @@ function Navbar() {
                         Home
                     </Link>
                     <span
-                        className="absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full"></span>
+                        className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
+                            (path === "/" ? " w-full" : "")}>
+                    </span>
                 </div>
                 <div className={"relative group"}>
 
@@ -30,7 +30,9 @@ function Navbar() {
                         Marketplace
                     </Link>
                     <span
-                        className="absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full"></span>
+                        className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
+                            (path === "/marketplace" ? " w-full" : "")}>
+                    </span>
                 </div>
                 <Link href={"/contact"}
                       className={"rounded-full font-semibold w-36 h-14 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
