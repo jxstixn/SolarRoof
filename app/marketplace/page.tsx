@@ -10,7 +10,7 @@ import {
     ModalBody,
     ModalContent,
     ModalFooter,
-    ModalHeader,
+    ModalHeader, ScrollShadow,
     SharedSelection,
     Slider, useDisclosure
 } from "@nextui-org/react";
@@ -32,8 +32,31 @@ function Page() {
     });
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
+    const listings = [
+        {
+            imageSrc: "/images/example1.webp",
+            title: "Market Listing 1",
+            solarScore: 3
+        },
+        {
+            imageSrc: "/images/example2.webp",
+            title: "Market Listing 2",
+            solarScore: 5
+        },
+        {
+            imageSrc: "/images/example3.webp",
+            title: "Market Listing 3",
+            solarScore: 1
+        },
+        {
+            imageSrc: "/images/example4.webp",
+            title: "Market Listing 4",
+            solarScore: 4
+        }
+    ];
+
     return (
-        <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full"}>
+        <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full max-h-full"}>
             <div className={"lg:hidden flex flex-row w-full justify-between px-8"}>
                 <h1 className={"text-4xl font-bold"}>Marketplace</h1>
                 <Button color={"primary"} onClick={onOpen}>Filters</Button>
@@ -98,12 +121,12 @@ function Page() {
                     </div>
                 </div>
             </div>
-            <div className={"flex flex-row flex-wrap max-h-full gap-4 w-full pt-4 px-8 overflow-auto"}>
-                <MarketListing imageSrc={"/images/example1.webp"} title={"Market Listing 1"} solarScore={3}/>
-                <MarketListing imageSrc={"/images/example2.webp"} title={"Market Listing 2"} solarScore={5}/>
-                <MarketListing imageSrc={"/images/example3.webp"} title={"Market Listing 3"} solarScore={1}/>
-                <MarketListing imageSrc={"/images/example4.webp"} title={"Market Listing 4"} solarScore={4}/>
-            </div>
+            <ScrollShadow className={"flex flex-row flex-wrap gap-4 w-full py-4 px-8 overflow-auto"}>
+                {listings.map((listing, index) => (
+                    <MarketListing key={index} imageSrc={listing.imageSrc} title={listing.title}
+                                   solarScore={listing.solarScore}/>
+                ))}
+            </ScrollShadow>
 
             <Modal
                 isOpen={isOpen}
@@ -158,19 +181,20 @@ function Page() {
                                     </div>
                                 )}
                             />
-                            <Location selectedKeys={filters.location as unknown as string[]} onSelectionChange={(keys) =>
-                                setFilters({...filters, location: keys})
-                            }/>
+                            <Location selectedKeys={filters.location as unknown as string[]}
+                                      onSelectionChange={(keys) =>
+                                          setFilters({...filters, location: keys})
+                                      }/>
                         </div>
                     </ModalBody>
                     <ModalFooter>
                         <Button color={"primary"} onClick={onOpenChange} fullWidth>Apply</Button>
                     </ModalFooter>
-            </ModalContent>
-        </Modal>
-</div>
-)
-    ;
+                </ModalContent>
+            </Modal>
+        </div>
+    )
+        ;
 }
 
 export default Page;

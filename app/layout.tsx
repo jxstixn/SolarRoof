@@ -28,7 +28,7 @@ export default function RootLayout({
         <ConfigureAmplifyClientSide/>
         <NextUIProvider>
             <Navbar/>
-            <main className={"max-w-dvw max-h-[calc(100dvh-7rem)] w-full h-dvh"}>
+            <main className={"max-w-dvw max-h-[calc(100dvh-64px)] lg:max-h-[calc(100dvh-7rem)] flex flex-col w-dvw h-dvh"}>
                 {children}
             </main>
         </NextUIProvider>

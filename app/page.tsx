@@ -3,12 +3,12 @@ import Image from "next/image";
 export default function Home() {
     return (
         <div
-            className="flex flex-col w-full h-full items-center justify-center text-zinc-800 font-bold text-md overflow-hidden"
+            className="flex flex-col w-full h-full max-h-full items-center justify-center text-zinc-800 font-bold text-md overflow-hidden"
         >
             {/* First Image - Slide in from the left */}
             <div
                 className="hidden md:block absolute md:-left-[12rem] xl:-left-[3rem] top-1/3 rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-left transition-all"
+               opacity-0 animate-fade-in-left transition-all z-10"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -24,7 +24,7 @@ export default function Home() {
             {/* Second Image - Slide in from the top */}
             <div
                 className="hidden md:block absolute md:left-52 xl:left-1/3 md:-top-[12rem] xl:-top-[8rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-down transition-all"
+               opacity-0 animate-fade-in-down transition-all z-50"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -40,7 +40,7 @@ export default function Home() {
             {/* Third Image - Slide in from the bottom */}
             <div
                 className="hidden md:block absolute md:right-8 xl:right-16 -bottom-[12rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-up transition-all"
+               opacity-0 animate-fade-in-up transition-all z-10"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105

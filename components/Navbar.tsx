@@ -19,7 +19,7 @@ export default function Nav() {
 
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isBlurred={false}
-                className={"bg-transparent w-full max-w-full px-8 lg:py-4"} classNames={{
+                className={"bg-[#ebece7] w-full max-w-full px-8 lg:py-4"} classNames={{
             wrapper: "max-w-full p-0",
         }}>
             <NavbarContent className={"justify-between"}>
