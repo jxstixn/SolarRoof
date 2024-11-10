@@ -23,9 +23,9 @@ function MarketListing({title, imageSrc, solarScore}: { imageSrc: string, title:
     }
 
     return (
-        <div className={"flex flex-col bg-white w-80 rounded-3xl p-4 shadow-xl gap-3 transform-all hover:scale-105 duration-300"}>
+        <div className={"flex flex-col bg-white w-80 max-h-[500px] rounded-3xl p-4 shadow-xl gap-3 transform-all hover:scale-105 duration-300"}>
             <div className={"relative max-w-full w-full max-h-64 h-48"}>
-                <Image className={"rounded-2xl shadow-md"} src={imageSrc} alt={"Market Listing"} fill={true} objectFit={"cover"}/>
+                <Image className={"rounded-2xl shadow-md object-cover"} src={imageSrc} alt={"Market Listing"} fill={true}/>
             </div>
             <h1 className={"text-xl font-bold"}>{title}</h1>
             <p key={"description"} className={"font-normal text-sm"}>

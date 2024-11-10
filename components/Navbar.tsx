@@ -8,6 +8,7 @@ import {
     NavbarMenuToggle,
     NavbarMenu,
     NavbarMenuItem,
+    Link as NextLink,
 } from "@nextui-org/react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
@@ -18,7 +19,7 @@ export default function Nav() {
 
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isBlurred={false}
-                className={"bg-transparent w-full max-w-full px-8 py-6"} classNames={{
+                className={"bg-transparent w-full max-w-full px-8 lg:py-4"} classNames={{
             wrapper: "max-w-full p-0",
         }}>
             <NavbarContent className={"justify-between"}>
@@ -49,28 +50,28 @@ export default function Nav() {
                     </Link>
                     <span
                         className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
-                            (path === "/marketplace" ? " w-full" : "")}>
+                            (path === "/marketplace" ? " group:w-full" : "")}>
                     </span>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex relative group">
                     <Link href={"/contact"}
-                          className={"rounded-full font-semibold w-36 h-14 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
+                          className={"rounded-full font-semibold w-36 h-12 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
                               "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
                               "hover:transform hover:scale-105 text-lg"}>
                         Apply Now!
                     </Link>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarMenu className={"bg-[#ebece7] p-8 text-end"}>
+            <NavbarMenu className={"bg-[#ebece7] p-8 text-end overflow-hidden"}>
                 <NavbarMenuItem key={"Home"}>
-                    <Link href={"/"}>
+                    <NextLink href={"/"} className={"text-black text-xl"}>
                         Home
-                    </Link>
+                    </NextLink>
                 </NavbarMenuItem>
                 <NavbarMenuItem key={"Marketplace"}>
-                    <Link href={"/marketplace"}>
+                    <NextLink href={"/marketplace"} className={"text-black text-xl"}>
                         Marketplace
-                    </Link>
+                    </NextLink>
                 </NavbarMenuItem>
             </NavbarMenu>
         </Navbar>

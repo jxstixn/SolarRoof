@@ -7,6 +7,7 @@ const schema = a.schema({
             address: a.string().required(),
             solarScore: a.integer(),
             price: a.integer(),
+            images: a.string().array(),
         }
     ).authorization(allow => [
         allow.owner().to(["create", "update", "delete"]),
