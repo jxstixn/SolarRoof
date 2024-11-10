@@ -57,17 +57,17 @@ function Page() {
 
     return (
         <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full max-h-full"}>
-            <div className={"lg:hidden flex flex-row w-full justify-between px-8"}>
+            <div className={"lg:hidden flex flex-row w-full justify-between px-8 animate-fade-in-up"}>
                 <h1 className={"text-4xl font-bold"}>Marketplace</h1>
                 <Button color={"primary"} onClick={onOpen}>Filters</Button>
             </div>
-            <div className={"hidden lg:flex flex-col w-[22rem] pl-8 gap-4 pt-4"}>
+            <div className={"hidden lg:flex flex-col w-[22rem] pl-8 gap-4 pt-4 animate-fade-in-up"}>
                 <div className={"flex flex-col gap-4"}>
                     <h1 className={"text-4xl font-bold"}>Marketplace</h1>
                     <p className={"text-lg hyphens-auto"}>Find the best solar panel installation opportunities in your
                         area.</p>
                 </div>
-                <div id={"filters"} className={"flex flex-col bg-white w-full rounded-3xl p-4 gap-2"}>
+                <div id={"filters"} className={"flex flex-col bg-white w-full rounded-3xl p-4 gap-2 animate-fade-in-up"}>
                     <h1 className={"text-xl font-bold"}>Filters</h1>
                     <Divider/>
                     <div id={"filterWrapper"} className={"flex flex-col w-full gap-4"}>
@@ -124,7 +124,7 @@ function Page() {
             <ScrollShadow className={"flex flex-row flex-wrap gap-4 w-full py-4 px-8 overflow-auto"}>
                 {listings.map((listing, index) => (
                     <MarketListing key={index} imageSrc={listing.imageSrc} title={listing.title}
-                                   solarScore={listing.solarScore}/>
+                                   solarScore={listing.solarScore} className={"animate-fade-in-up"}/>
                 ))}
             </ScrollShadow>
 

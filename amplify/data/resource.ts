@@ -6,7 +6,7 @@ const schema = a.schema({
             description: a.string(),
             address: a.string().required(),
             solarScore: a.integer(),
-            price: a.integer(),
+            price: a.integer().required(),
             images: a.string().array(),
         }
     ).authorization(allow => [

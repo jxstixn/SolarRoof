@@ -1,5 +1,5 @@
 "use client"
-import React from "react";
+import React, {useState} from "react";
 import {
     Navbar,
     NavbarBrand,
@@ -8,14 +8,14 @@ import {
     NavbarMenuToggle,
     NavbarMenu,
     NavbarMenuItem,
-    Link as NextLink,
+    Link as NextLink, Divider,
 } from "@nextui-org/react";
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 
 export default function Nav() {
     const path = usePathname();
-    const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen} isBlurred={false}
@@ -24,9 +24,9 @@ export default function Nav() {
         }}>
             <NavbarContent className={"justify-between"}>
                 <NavbarBrand>
-                    <p className="font-bold text-inherit">
+                    <Link href={"/"} className="font-bold text-inherit">
                         SolarRoof
-                    </p>
+                    </Link>
                 </NavbarBrand>
                 <NavbarMenuToggle
                     aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -54,25 +54,46 @@ export default function Nav() {
                     </span>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex relative group">
-                    <Link href={"/contact"}
-                          className={"rounded-full font-semibold w-36 h-12 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
-                              "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
-                              "hover:transform hover:scale-105 text-lg"}>
-                        Apply Now!
+                    <Link href={"/contact"}>
+                        Contact
+                    </Link>
+                    <span
+                        className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
+                            (path === "/contact" ? " w-full" : "")}>
+                    </span>
+                </NavbarItem>
+                <NavbarItem className="hidden lg:flex relative group">
+                    <Link href={"/login"}
+                          className={"rounded-full font-semibold w-20 h-8 bg-zinc-800 hover:bg-white text-white " +
+                              "hover:text-zinc-800 flex items-center justify-center transition-all duration-300 " +
+                              "hover:transform hover:scale-105 text-md shadow-md"}>
+                        Login
                     </Link>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarMenu className={"bg-[#ebece7] p-8 text-end overflow-hidden"}>
-                <NavbarMenuItem key={"Home"}>
+            <NavbarMenu className={"flex flex-col h-full bg-[#ebece7] p-8 text-end overflow-hidden z-50"}>
+                <NavbarMenuItem key={"Home"} isActive={path === "/"}>
                     <NextLink href={"/"} className={"text-black text-xl"}>
                         Home
                     </NextLink>
                 </NavbarMenuItem>
-                <NavbarMenuItem key={"Marketplace"}>
+                <NavbarMenuItem key={"Marketplace"} isActive={path === "/marketplace"}>
                     <NextLink href={"/marketplace"} className={"text-black text-xl"}>
                         Marketplace
                     </NextLink>
                 </NavbarMenuItem>
+                <NavbarMenuItem key={"Contact"} isActive={path === "/contact"}>
+                    <NextLink href={"/contact"} className={"text-black text-xl"}>
+                        Contact
+                    </NextLink>
+                </NavbarMenuItem>
+                <Divider className={"bg-transparent p-2"}/>
+                <NavbarMenuItem key={"Login"} className={"justify-end self-end"} isActive={path === "/login"}>
+                    <NextLink href={"/login"} className={"text-black text-xl"}>
+                        Login
+                    </NextLink>
+                </NavbarMenuItem>
+
             </NavbarMenu>
         </Navbar>
     );

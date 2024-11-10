@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
 export default function Home() {
     return (
@@ -8,7 +10,7 @@ export default function Home() {
             {/* First Image - Slide in from the left */}
             <div
                 className="hidden md:block absolute md:-left-[12rem] xl:-left-[3rem] top-1/3 rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-left transition-all z-10"
+               opacity-0 animate-fade-in-left transition-all"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -24,7 +26,7 @@ export default function Home() {
             {/* Second Image - Slide in from the top */}
             <div
                 className="hidden md:block absolute md:left-52 xl:left-1/3 md:-top-[12rem] xl:-top-[8rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-down transition-all z-50"
+               opacity-0 animate-fade-in-down transition-all z-40"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -40,7 +42,7 @@ export default function Home() {
             {/* Third Image - Slide in from the bottom */}
             <div
                 className="hidden md:block absolute md:right-8 xl:right-16 -bottom-[12rem] rounded-3xl shadow-xl
-               opacity-0 animate-fade-in-up transition-all z-10"
+               opacity-0 animate-fade-in-up transition-all"
             >
                 <Image
                     className="transform transition-transform duration-300 hover:scale-105
@@ -65,6 +67,12 @@ export default function Home() {
                     <br/>
                     Rent it out and start earning money today!
                 </p>
+                <Link href={"/contact"}
+                      className={"rounded-full font-semibold mt-6 w-36 h-12 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
+                          "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
+                          "hover:transform hover:scale-105 text-lg shadow-md"}>
+                    Get Started!
+                </Link>
             </div>
         </div>
     );

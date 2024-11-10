@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-function MarketListing({title, imageSrc, solarScore}: { imageSrc: string, title: string, solarScore: number }) {
+function MarketListing({className, title, imageSrc, solarScore}: { className: string, imageSrc: string, title: string, solarScore: number }) {
 
     function computeSolarScoreColor(solarScore: number) {
         // rank them from 1 to 5 with 1 being the worst and 5 being the best
@@ -23,7 +23,7 @@ function MarketListing({title, imageSrc, solarScore}: { imageSrc: string, title:
     }
 
     return (
-        <div className={"flex flex-col bg-white w-80 max-h-[500px] rounded-3xl p-4 shadow-xl gap-3 transform-all hover:scale-105 duration-300"}>
+        <div className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 shadow-xl gap-3 transform-all hover:scale-105 duration-300 " + className}>
             <div className={"relative max-w-full w-full max-h-64 h-48"}>
                 <Image className={"rounded-2xl shadow-md object-cover"} src={imageSrc} alt={"Market Listing"} fill={true}/>
             </div>
