@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="accountSettings">
-    <option name="activeProfile" value="profile:main-717279720696-AdministratorAccess" />
+    <option name="activeProfile" value="profile:d-996764a661-717279720696-AdministratorAccess" />
     <option name="activeRegion" value="eu-central-1" />
     <option name="recentlyUsedProfiles">
       <list>
-        <option value="profile:main-717279720696-AdministratorAccess" />
         <option value="profile:d-996764a661-717279720696-AdministratorAccess" />
+        <option value="profile:main-717279720696-AdministratorAccess" />
         <option value="profile:default" />
       </list>
     </option>
@@ -16,7 +16,10 @@
       </list>
     </option>
   </component>
+  <component name="connectionManager">
+    <option name="activeConnectionId" value="AwsConnectionManagerConnection" />
+  </component>
   <component name="explorerToolWindow">
-    <option name="selectedTab" value="Amazon Q" />
+    <option name="selectedTab" value="Explorer" />
   </component>
 </project>

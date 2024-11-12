@@ -11,6 +11,7 @@ function Location({selectedKeys, onSelectionChange}: LocationProps) {
             <p className={"text-lg font-bold text-black"}>Location</p>
             <Select
                 className="max-w-xs"
+                aria-label={"Location"}
                 placeholder="Search for a location"
                 selectionMode={"multiple"}
                 selectedKeys={selectedKeys}
