@@ -10,7 +10,6 @@ function Location({selectedKeys, onSelectionChange}: LocationProps) {
         <div className={"flex flex-col gap-2"}>
             <p className={"text-lg font-bold text-black"}>Location</p>
             <Select
-                className="max-w-xs"
                 aria-label={"Location"}
                 placeholder="Search for a location"
                 selectionMode={"multiple"}

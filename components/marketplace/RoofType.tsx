@@ -10,6 +10,7 @@ function RoofType(
 ) {
     return (
         <CheckboxGroup
+            name={"roofType"}
             label={<p className={"text-lg font-bold text-black"}>Roof Type</p>}
             value={value}
             onValueChange={onValueChange}

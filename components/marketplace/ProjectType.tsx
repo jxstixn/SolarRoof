@@ -10,6 +10,7 @@ function ProjectType(
 ) {
     return (
         <CheckboxGroup
+            name={"projectType"}
             label={<p className={"text-lg font-bold text-black"}>Project Type</p>}
             value={value}
             onValueChange={onValueChange}

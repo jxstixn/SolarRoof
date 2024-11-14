@@ -10,7 +10,7 @@ export async function POST (req: NextRequest) {
 
     // apply random price between 10000 and 50000
     listing.price = Math.floor(Math.random() * 40000) + 10000;
-    console.log("Creating listing:", listing);
+
     try {
         const {data: result, errors} = await cookiesClient.models.Listing.create({
             name: listing.name,
@@ -22,6 +22,8 @@ export async function POST (req: NextRequest) {
             solarScore: listing.solarScore,
             price: listing.price,
             images: listing.images,
+            roofType: listing.roofType,
+            projectType: listing.projectType,
         });
         const listingId = result?.id;
 

@@ -1,5 +1,5 @@
 "use client"
-import {Autocomplete, AutocompleteItem, Button, Input, Textarea} from "@nextui-org/react";
+import {Autocomplete, AutocompleteItem, Button, Input, Select, SelectItem, Textarea} from "@nextui-org/react";
 import React, {useRef, useState} from "react";
 import Camera from "@/components/icons/Camera";
 import {uploadData} from "@aws-amplify/storage";
@@ -22,7 +22,9 @@ function Form() {
         street: "",
         postalCode: "",
         city: "",
-        description: ""
+        description: "",
+        roofType: "",
+        projectType: ""
     });
     const [invalidInputs, setInvalidInputs] = useState({
         givenName: false,
@@ -33,7 +35,9 @@ function Form() {
         street: false,
         postalCode: false,
         city: false,
-        description: false
+        description: false,
+        roofType: false,
+        projectType: false
     })
 
     const validateInputs = () => {
@@ -46,6 +50,8 @@ function Form() {
         const validPostalCode = formData.postalCode.length > 0;
         const validCity = formData.city.length > 0;
         const validName = formData.name.length > 0;
+        const validRoofType = formData.roofType.length > 0;
+        const validProjectType = formData.projectType.length > 0;
 
         setInvalidInputs({
             givenName: !validGivenName,
@@ -56,10 +62,12 @@ function Form() {
             postalCode: !validPostalCode,
             city: !validCity,
             name: !validName,
-            description: false
+            description: false,
+            roofType: !validRoofType,
+            projectType: !validProjectType
         });
 
-        return validEmail && validGivenName && validFamilyName && validCountry && validStreet && validPostalCode && validCity;
+        return validEmail && validGivenName && validFamilyName && validCountry && validStreet && validPostalCode && validCity && validRoofType && validProjectType;
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -103,7 +111,9 @@ function Form() {
             postalCode: "",
             city: "",
             name: "",
-            description: ""
+            description: "",
+            roofType: "",
+            projectType: ""
         })
         setImages([]);
     }
@@ -201,6 +211,51 @@ function Form() {
                 <h2 className={"text-md font-bold"}>Property Information</h2>
                 <div className={"flex flex-col lg:flex-row gap-4"}>
                     <div className={"flex flex-col w-full h-full max-h-full gap-4"}>
+                        <Select
+                            id={"roofType"}
+                            name={"roofType"}
+                            label={"Roof Type"}
+                            placeholder={"Roof Type"}
+                            onChange={(event) => {
+                                setFormData({
+                                    ...formData,
+                                    roofType: event.target.value
+                                });
+                                setInvalidInputs({
+                                    ...invalidInputs,
+                                    roofType: false
+                                });
+                            }}
+                            isInvalid={invalidInputs.roofType}
+                            errorMessage={invalidInputs.roofType ? "Please enter a valid roof type" : ""}
+                            required
+                        >
+                            <SelectItem key={"flat"} value={"flat"}>Flat</SelectItem>
+                            <SelectItem key={"sloped"} value={"sloped"}>Sloped</SelectItem>
+                            <SelectItem key={"pitched"} value={"pitched"}>Pitched</SelectItem>
+                        </Select>
+                        <Select
+                            id={"projectType"}
+                            name={"projectType"}
+                            label={"Project Type"}
+                            placeholder={"Project Type"}
+                            onChange={(event) => {
+                                setFormData({
+                                    ...formData,
+                                    projectType: event.target.value
+                                });
+                                setInvalidInputs({
+                                    ...invalidInputs,
+                                    projectType: false
+                                });
+                            }}
+                            isInvalid={invalidInputs.projectType}
+                            errorMessage={invalidInputs.projectType ? "Please enter a valid project type" : ""}
+                            required
+                        >
+                            <SelectItem key={"open"} value={"open"}>Open Space</SelectItem>
+                            <SelectItem key={"roof"} value={"roof"}>Roof Space</SelectItem>
+                        </Select>
                         <Autocomplete
                             id={"country"}
                             name={"country"}

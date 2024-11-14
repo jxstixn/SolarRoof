@@ -9,6 +9,8 @@ const schema = a.schema({
             city: a.string().required(),
             postalCode: a.string().required(),
             solarScore: a.integer(),
+            roofType: a.string().required(),
+            projectType: a.string().required(),
             price: a.integer(),
             images: a.string().array(),
             verified: a.boolean().default(false),

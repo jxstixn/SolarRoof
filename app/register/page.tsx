@@ -19,7 +19,6 @@ function Page() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
-        console.log(formData);
     }
 
     return (

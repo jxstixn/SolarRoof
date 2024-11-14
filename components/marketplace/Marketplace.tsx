@@ -1,7 +1,7 @@
 "use client"
 import MarketListing from "@/components/marketplace/MarketListing";
 import ProjectType from "@/components/marketplace/ProjectType";
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import RoofType from "@/components/marketplace/RoofType";
 import {
     Button,
@@ -15,6 +15,7 @@ import {
     Slider, useDisclosure
 } from "@nextui-org/react";
 import Location from "@/components/marketplace/Location";
+
 import {Schema} from "@/amplify/data/resource";
 type Listing = Schema["Listing"]["type"];
 
@@ -26,17 +27,43 @@ function Marketplace({listings}: MarketplaceProps) {
     const [filters, setFilters] = useState<{
         projectType: string[],
         roofType: string[],
-        solarScore: number,
-        price: number,
+        solarScore: number[]
+        price: number[]
         location: SharedSelection
     }>({
         projectType: ["open", "roof"],
         roofType: ["flat", "sloped", "pitched"],
-        solarScore: 0,
-        price: 0,
+        solarScore: [1, 5],
+        price: [0, 50000],
         location: new Set([])
     });
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+    const filteredListings = useMemo(() => {
+        if (!listings) {
+            return [];
+        }
+        return listings.filter(listing => {
+            if (!listing.solarScore || !listing.price) {
+                return false;
+            }
+            if (!filters.projectType.includes(listing.projectType)) {
+                return false;
+            }
+            if (!filters.roofType.includes(listing.roofType)) {
+                return false;
+            }
+            if (listing.solarScore < filters.solarScore[0] || listing.solarScore > filters.solarScore[1]) {
+                return false;
+            }
+            if (listing.price < filters.price[0] || listing.price > filters.price[1]) {
+                return false;
+            }
+            // return true
+            return Array.from(filters.location).length !== 0 ? Array.from(filters.location).includes(listing.country.toLowerCase()) : true;
+
+        });
+    }, [listings, filters]);
 
     return (
         <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full max-h-full"}>
@@ -50,7 +77,8 @@ function Marketplace({listings}: MarketplaceProps) {
                     <p className={"text-lg hyphens-auto"}>Find the best solar panel installation opportunities in your
                         area.</p>
                 </div>
-                <div id={"filters"} className={"flex flex-col bg-white w-full rounded-3xl p-4 gap-2 animate-fade-in-up"}>
+                <div id={"filters"}
+                     className={"flex flex-col bg-white w-full rounded-3xl p-4 gap-2 animate-fade-in-up"}>
                     <h1 className={"text-xl font-bold"}>Filters</h1>
                     <Divider/>
                     <div id={"filterWrapper"} className={"flex flex-col w-full gap-4"}>
@@ -63,7 +91,8 @@ function Marketplace({listings}: MarketplaceProps) {
                             step={1000}
                             minValue={0}
                             maxValue={50000}
-                            defaultValue={[0, 50000]}
+                            value={filters.price}
+                            onChange={(value) => setFilters({...filters, price: (value as number[])})}
                             formatOptions={{style: "currency", currency: "EUR"}}
                             showTooltip={true}
                             renderThumb={(props) => (
@@ -81,7 +110,8 @@ function Marketplace({listings}: MarketplaceProps) {
                             step={1}
                             minValue={1}
                             maxValue={5}
-                            defaultValue={[1, 5]}
+                            value={filters.solarScore}
+                            onChange={(value) => setFilters({...filters, solarScore: (value as number[])})}
                             getValue={(value) => {
                                 const [min, max] = value.toString().split(",");
                                 return min + ' - ' + max;
@@ -105,9 +135,9 @@ function Marketplace({listings}: MarketplaceProps) {
                 </div>
             </div>
             <ScrollShadow className={"flex flex-row flex-wrap gap-4 w-full h-full py-4 px-8 overflow-auto"}>
-                {listings.map((listing, index) => (
+                {filteredListings.map((listing, index) => (
                     <div className={"w-full sm:w-80 animate-fade-in-up"} key={index}>
-                        <MarketListing image={listing.images?.[0]} title={listing.name} solarScore={listing.solarScore}/>
+                        <MarketListing listing={listing}/>
                     </div>
                 ))}
             </ScrollShadow>
@@ -120,17 +150,19 @@ function Marketplace({listings}: MarketplaceProps) {
                 <ModalContent>
                     <ModalHeader className="flex flex-col font-bold gap-1">Filter</ModalHeader>
                     <ModalBody>
-                        <div id={"mobileFilterWrapper"} className={"flex flex-col w-full gap-4"}>
+                        <form id={"mobileFilterWrapper"} className={"flex flex-col w-full gap-4"}>
                             <RoofType value={filters.roofType}
                                       onValueChange={(value) => setFilters({...filters, roofType: value})}/>
                             <ProjectType value={filters.projectType}
                                          onValueChange={(value) => setFilters({...filters, projectType: value})}/>
                             <Slider
+                                name={"price"}
                                 label={<p className={"text-lg font-bold text-black"}>Price</p>}
                                 step={1000}
                                 minValue={0}
                                 maxValue={50000}
-                                defaultValue={[0, 50000]}
+                                value={filters.price}
+                                onChange={(value) => setFilters({...filters, price: (value as number[])})}
                                 formatOptions={{style: "currency", currency: "EUR"}}
                                 showTooltip={true}
                                 renderThumb={(props) => (
@@ -148,7 +180,8 @@ function Marketplace({listings}: MarketplaceProps) {
                                 step={1}
                                 minValue={1}
                                 maxValue={5}
-                                defaultValue={[1, 5]}
+                                value={filters.solarScore}
+                                onChange={(value) => setFilters({...filters, solarScore: (value as number[])})}
                                 getValue={(value) => {
                                     const [min, max] = value.toString().split(",");
                                     return min + ' - ' + max;
@@ -165,14 +198,15 @@ function Marketplace({listings}: MarketplaceProps) {
                                     </div>
                                 )}
                             />
-                            <Location selectedKeys={filters.location as unknown as string[]}
-                                      onSelectionChange={(keys) =>
-                                          setFilters({...filters, location: keys})
-                                      }/>
-                        </div>
+                            <Location
+                                selectedKeys={filters.location as unknown as string[]}
+                                onSelectionChange={(keys) =>
+                                    setFilters({...filters, location: keys})
+                                }/>
+                        </form>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color={"primary"} onClick={onOpenChange} fullWidth>Apply</Button>
+                        <Button type={"submit"} color={"primary"} onClick={onOpenChange} fullWidth>Apply</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
