@@ -15,8 +15,27 @@ interface LoginFormProps {
 
 function LoginForm({setUsername, setNextStep}: LoginFormProps) {
     const [error, setError] = useState("");
+    const [invalidInputs, setInvalidInputs] = useState<{
+        email? : string | undefined;
+        password? : string | undefined;
+    }>({})
+
+    function validateInputs(formData: FormData) {
+        const newInvalidInputs = {...invalidInputs};
+        if (!formData.get("email")) {
+            newInvalidInputs.email = "Please enter an email";
+        }
+        if (!formData.get("password")) {
+            newInvalidInputs.password = "Please enter a password";
+        }
+        setInvalidInputs(newInvalidInputs);
+        return Object.values(newInvalidInputs).every((value) => !value);
+    }
 
     async function loginUser(formData: FormData) {
+        if (!validateInputs(formData)) {
+            return;
+        }
         try {
             const {nextStep} = await signIn({
                 username: formData.get("email") as string,
@@ -45,9 +64,11 @@ function LoginForm({setUsername, setNextStep}: LoginFormProps) {
                     placeholder={"Email"}
                     type={"email"}
                     onChange={() => {
+                        setInvalidInputs({...invalidInputs, email: undefined});
                         setError("");
                     }}
-                    isInvalid={!!error}
+                    isInvalid={!!error || !!invalidInputs.email}
+                    errorMessage={invalidInputs.email ? "Please enter a valid email" : ""}
                     required/>
                 <Input
                     id={"password"}
@@ -56,9 +77,11 @@ function LoginForm({setUsername, setNextStep}: LoginFormProps) {
                     placeholder={"Password"}
                     type={"password"}
                     onChange={() => {
+                        setInvalidInputs({...invalidInputs, password: undefined});
                         setError("");
                     }}
-                    isInvalid={!!error}
+                    isInvalid={!!error || !!invalidInputs.password}
+                    errorMessage={invalidInputs.password ? "Please enter a password" : ""}
                     required/>
                 <SubmitButton
                     name={"Login"}
