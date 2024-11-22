@@ -14,6 +14,8 @@ const schema = a.schema({
             price: a.integer(),
             images: a.string().array(),
             verified: a.boolean().default(false),
+            user: a.belongsTo("User", "ownerId"),
+            ownerId: a.id(),
             favoritedBy: a.hasMany("FavoriteListing", "listingId"),
         }
     ).authorization(allow => [
@@ -27,7 +29,7 @@ const schema = a.schema({
         email: a.string().required(),
         preferences: a.json(),
         favoriteListings: a.hasMany("FavoriteListing", "userId"),
-        listings: a.hasMany("Listing", "owner"),
+        listings: a.hasMany("Listing", "ownerId"),
     }).authorization(allow => [
         allow.ownerDefinedIn("id").identityClaim("sub"),
         allow.groups(["Admin"])
@@ -35,6 +37,8 @@ const schema = a.schema({
     FavoriteListing: a.model({
         listingId: a.id().required(),
         userId: a.id().required(),
+        listings: a.belongsTo("Listing", "listingId"),
+        users: a.belongsTo("User", "userId"),
     }).authorization(allow => [
         allow.ownerDefinedIn("userId").identityClaim("sub"),
         allow.groups(["Admin"])
