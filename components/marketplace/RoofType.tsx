@@ -2,16 +2,18 @@ import {Checkbox, CheckboxGroup} from "@nextui-org/react";
 
 interface RoofTypeProps {
     value: string[];
-    onValueChange: ((value: string[]) => void) | undefined
+    onValueChange: ((value: string[]) => void) | undefined,
+    disabled?: boolean
 }
 
 function RoofType(
-    {value = ["open", "roof"], onValueChange}: RoofTypeProps
+    {value = ["open", "roof"], onValueChange, disabled}: RoofTypeProps
 ) {
     return (
         <CheckboxGroup
             name={"roofType"}
-            label={<p className={"text-lg font-bold text-black"}>Roof Type</p>}
+            isDisabled={disabled}
+            label={<p className={"text-lg font-semibold text-black" + (disabled ? " opacity-disabled" : "")}>Roof Type</p>}
             value={value}
             onValueChange={onValueChange}
             classNames={{wrapper: "px-2"}}

@@ -12,10 +12,13 @@
     "@aws-amplify/adapter-nextjs": "^1.2.26",
     "@nextui-org/react": "^2.4.8",
     "aws-amplify": "^6.8.0",
+    "chart.js": "^4.4.6",
     "framer-motion": "^11.11.11",
     "next": "^14.x",
     "react": "^18",
-    "react-dom": "^18"
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "^18",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@aws-amplify/backend": "^1.6.2",

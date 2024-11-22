@@ -2,16 +2,18 @@ import {Checkbox, CheckboxGroup} from "@nextui-org/react";
 
 interface ProjectTypeProps {
     value: string[];
-    onValueChange: ((value: string[]) => void) | undefined
+    onValueChange: ((value: string[]) => void) | undefined,
+    disabled?: boolean
 }
 
 function ProjectType(
-    {value = ["open", "roof"], onValueChange}: ProjectTypeProps
+    {value = ["open", "roof"], onValueChange, disabled}: ProjectTypeProps
 ) {
     return (
         <CheckboxGroup
             name={"projectType"}
-            label={<p className={"text-lg font-bold text-black"}>Project Type</p>}
+            isDisabled={disabled}
+            label={<p className={"text-lg font-semibold text-black" + (disabled ? " opacity-disabled" : "")}>Project Type</p>}
             value={value}
             onValueChange={onValueChange}
             classNames={{wrapper: "px-2"}}

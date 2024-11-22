@@ -66,7 +66,7 @@ function Marketplace({listings}: MarketplaceProps) {
     }, [listings, filters]);
 
     return (
-        <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full max-h-full"}>
+        <div id={"wrapper"} className={"flex flex-col lg:flex-row w-full h-full max-h-full max-w-[1500px]"}>
             <div className={"lg:hidden flex flex-row w-full justify-between px-8 animate-fade-in-up"}>
                 <h1 className={"text-4xl font-bold"}>Marketplace</h1>
                 <Button color={"primary"} onClick={onOpen}>Filters</Button>
@@ -87,7 +87,7 @@ function Marketplace({listings}: MarketplaceProps) {
                         <ProjectType value={filters.projectType}
                                      onValueChange={(value) => setFilters({...filters, projectType: value})}/>
                         <Slider
-                            label={<p className={"text-lg font-bold text-black"}>Price</p>}
+                            label={<p className={"text-lg font-semibold text-black"}>Price</p>}
                             step={1000}
                             minValue={0}
                             maxValue={50000}
@@ -106,7 +106,7 @@ function Marketplace({listings}: MarketplaceProps) {
                             )}
                         />
                         <Slider
-                            label={<p className={"text-lg font-bold text-black"}>Solar Score</p>}
+                            label={<p className={"text-lg font-semibold text-black"}>Solar Score</p>}
                             step={1}
                             minValue={1}
                             maxValue={5}

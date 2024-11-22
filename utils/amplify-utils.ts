@@ -7,6 +7,7 @@ import {getCurrentUser} from "aws-amplify/auth/server";
 
 import {type Schema} from "@/amplify/data/resource";
 import outputs from "@/amplify_outputs.json";
+import {fetchAuthSession} from "@aws-amplify/core/server";
 
 export const { runWithAmplifyServerContext } = createServerRunner({
     config: outputs,
@@ -22,6 +23,17 @@ export async function AuthGetCurrentUserServer() {
         return await runWithAmplifyServerContext({
             nextServerContext: {cookies},
             operation: (contextSpec) => getCurrentUser(contextSpec),
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function FetchAuthSessionServer() {
+    try {
+        return await runWithAmplifyServerContext({
+            nextServerContext: {cookies},
+            operation: (contextSpec) => fetchAuthSession(contextSpec),
         });
     } catch (error) {
         console.error(error);

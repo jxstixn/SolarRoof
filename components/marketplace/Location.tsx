@@ -2,15 +2,18 @@ import {Select, SelectItem, SharedSelection} from "@nextui-org/react";
 
 interface LocationProps {
     selectedKeys: string[]
-    onSelectionChange: ((keys: SharedSelection) => void) | undefined
+    onSelectionChange: ((keys: SharedSelection) => void) | undefined,
+    disabled?: boolean
 }
 
-function Location({selectedKeys, onSelectionChange}: LocationProps) {
+function Location({selectedKeys, onSelectionChange, disabled}: LocationProps) {
     return (
         <div className={"flex flex-col gap-2"}>
-            <p className={"text-lg font-bold text-black"}>Location</p>
             <Select
+                isDisabled={disabled}
                 aria-label={"Location"}
+                label={<p className={"text-lg font-semibold text-black"}>Location</p>}
+                labelPlacement={"outside"}
                 placeholder="Search for a location"
                 selectionMode={"multiple"}
                 selectedKeys={selectedKeys}

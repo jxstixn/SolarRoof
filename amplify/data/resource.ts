@@ -14,11 +14,30 @@ const schema = a.schema({
             price: a.integer(),
             images: a.string().array(),
             verified: a.boolean().default(false),
+            favoritedBy: a.hasMany("FavoriteListing", "listingId"),
         }
     ).authorization(allow => [
-        // allow.owner().to(["create", "update", "delete"]),
+        allow.owner().identityClaim("sub"),
+        allow.groups(["Admin"]),
         allow.authenticated().to(["read"]),
         allow.guest(),
+    ]),
+    User: a.model({
+        id: a.id().required(),
+        email: a.string().required(),
+        preferences: a.json(),
+        favoriteListings: a.hasMany("FavoriteListing", "userId"),
+        listings: a.hasMany("Listing", "owner"),
+    }).authorization(allow => [
+        allow.ownerDefinedIn("id").identityClaim("sub"),
+        allow.groups(["Admin"])
+    ]),
+    FavoriteListing: a.model({
+        listingId: a.id().required(),
+        userId: a.id().required(),
+    }).authorization(allow => [
+        allow.ownerDefinedIn("userId").identityClaim("sub"),
+        allow.groups(["Admin"])
     ]),
 });
 

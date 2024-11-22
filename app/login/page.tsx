@@ -1,109 +1,29 @@
 "use client"
 
-import {Button, Divider, Input} from "@nextui-org/react";
-import {FormEvent, useState} from "react";
-import {signIn} from "@aws-amplify/auth";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/navigation";
+import OTPForm from "@/components/auth/OTPForm";
+import LoginForm from "@/components/auth/LoginForm";
 
 function Page() {
-    const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-    const [invalidInputs, setInvalidInputs] = useState({
-        email: false,
-        password: false
-    });
-    const [error, setError] = useState("");
+    const router = useRouter()
+    const [username, setUsername] = useState<string>('')
+    const [nextStep, setNextStep] = useState<"CONFIRM_SIGN_IN_WITH_TOTP_CODE" | "CONFIRM_SIGN_IN_WITH_CUSTOM_CHALLENGE"
+        | "CONTINUE_SIGN_IN_WITH_MFA_SELECTION" | "CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED"
+        | "CONFIRM_SIGN_IN_WITH_SMS_CODE" | "CONFIRM_SIGN_IN_WITH_EMAIL_CODE" | "CONTINUE_SIGN_IN_WITH_TOTP_SETUP"
+        | "CONTINUE_SIGN_IN_WITH_EMAIL_SETUP" | "CONTINUE_SIGN_IN_WITH_MFA_SETUP_SELECTION" | "CONFIRM_SIGN_UP"
+        | "RESET_PASSWORD" | "DONE" | "COMPLETE_AUTO_SIGN_IN">()
 
-    const validateEmail = () => {
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-        setInvalidInputs({...invalidInputs, email: !emailRegex.test(formData.email)});
-        return emailRegex.test(formData.email);
-    }
-
-    const validatePassword = () => {
-        setInvalidInputs({...invalidInputs, password: formData.password.length === 0});
-        return formData.password.length > 0;
-    }
-
-    const validateInputs = () => {
-        return validateEmail() && validatePassword();
-    }
-
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setLoading(true);
-
-        if (!validateInputs()) {
-            setLoading(false);
-            return;
+    useEffect(() => {
+        if (nextStep === "COMPLETE_AUTO_SIGN_IN" || nextStep === "DONE") {
+            // Redirect to the dashboard
+            router.push('/dashboard')
         }
+    }, [nextStep, router]);
 
-        try {
-            const {nextStep} = await signIn({
-                username: formData.email,
-                password: formData.password
-            });
-            console.log(nextStep);
-        } catch (e) {
-            const error = e as Error;
-            setError(error.message);
-            setLoading(false);
-        }
-    }
-
-    return (
-        <form onSubmit={handleSubmit} noValidate
-              className="flex flex-col w-full h-full max-h-full items-center justify-center text-zinc-800 font-bold text-md overflow-hidden p-8 animate-fade-in-up">
-            <div className={"flex flex-col bg-white w-full sm:w-80 rounded-3xl p-4 gap-4 shadow-md"}>
-                <div className={"flex flex-col gap-2"}>
-                    <h1 className={"text-xl font-bold"}>Login</h1>
-                    <Divider/>
-                </div>
-                <Input
-                    id={"email"}
-                    label={"Email"}
-                    placeholder={"Email"}
-                    type={"email"}
-                    value={formData.email}
-                    onChange={(e) => {
-                        setFormData({...formData, email: e.target.value})
-                        setInvalidInputs({...invalidInputs, email: false})
-                    }}
-                    isInvalid={invalidInputs.email}
-                    errorMessage={invalidInputs.email ? "Please enter a valid email" : ""}
-                    onFocusChange={validateEmail}
-                    required/>
-                <Input
-                    id={"password"}
-                    label={"Password"}
-                    placeholder={"Password"}
-                    type={"password"}
-                    value={formData.password}
-                    onChange={(e) => {
-                        setFormData({...formData, password: e.target.value})
-                        setInvalidInputs({...invalidInputs, password: false})
-                    }}
-                    onFocusChange={validatePassword}
-                    isInvalid={invalidInputs.password}
-                    errorMessage={invalidInputs.password ? "Please enter a password" : ""}
-                    required/>
-                <Button
-                    isLoading={loading}
-                    type={"submit"}
-                    color={"primary"}
-                    className={"font-bold shadow-md"}>
-                    Login
-                </Button>
-                <p className={error ? "text-center text-sm text-danger" : "hidden"}>
-                    {error}
-                </p>
-                <p className={"text-center text-sm"}>
-                    Don&apos;t have an account? <a href={"/register"} className={"text-primary"}>Register</a>
-                </p>
-            </div>
-        </form>
+    return (nextStep === "CONFIRM_SIGN_UP"
+            ? <OTPForm username={username} setNextStep={setNextStep}/>
+            : <LoginForm setUsername={setUsername} setNextStep={setNextStep}/>
     )
 }
 
