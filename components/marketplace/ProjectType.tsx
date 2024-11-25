@@ -1,8 +1,8 @@
 import {Checkbox, CheckboxGroup} from "@nextui-org/react";
 
 interface ProjectTypeProps {
-    value: string[];
-    onValueChange: ((value: string[]) => void) | undefined,
+    value?: string[];
+    onValueChange?: ((value: string[]) => void) | undefined,
     disabled?: boolean
 }
 

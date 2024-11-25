@@ -1,8 +1,8 @@
 import {Select, SelectItem, SharedSelection} from "@nextui-org/react";
 
 interface LocationProps {
-    selectedKeys: string[]
-    onSelectionChange: ((keys: SharedSelection) => void) | undefined,
+    selectedKeys?: string[]
+    onSelectionChange?: ((keys: SharedSelection) => void) | undefined,
     disabled?: boolean
 }
 
@@ -10,6 +10,8 @@ function Location({selectedKeys, onSelectionChange, disabled}: LocationProps) {
     return (
         <div className={"flex flex-col gap-2"}>
             <Select
+                id={"location"}
+                name={"location"}
                 isDisabled={disabled}
                 aria-label={"Location"}
                 label={<p className={"text-lg font-semibold text-black"}>Location</p>}

@@ -26,7 +26,8 @@ const schema = a.schema({
     ]),
     User: a.model({
         id: a.id().required(),
-        email: a.string().required(),
+        email: a.email().required(),
+        role: a.enum(["Investor", "Lister"]),
         preferences: a.json(),
         favoriteListings: a.hasMany("FavoriteListing", "userId"),
         listings: a.hasMany("Listing", "ownerId"),

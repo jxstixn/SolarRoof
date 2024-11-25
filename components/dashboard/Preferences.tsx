@@ -7,7 +7,17 @@ import ProjectType from "@/components/marketplace/ProjectType";
 import Location from "@/components/marketplace/Location";
 import Switch from "@/components/input/Switch";
 
-function Preferences() {
+interface PreferencesProps {
+    preferences: {
+        projectType: string[],
+        roofType: string[],
+        solarScore: number[]
+        price: number[]
+        location: SharedSelection
+    }
+}
+
+function Preferences({preferences}: PreferencesProps) {
     const [edit, setEdit] = useState<boolean>(false);
     const [filters, setFilters] = useState<{
         projectType: string[],
@@ -16,12 +26,12 @@ function Preferences() {
         price: number[]
         location: SharedSelection
     }>({
-        projectType: ["open", "roof"],
-        roofType: ["flat", "sloped", "pitched"],
-        solarScore: [1, 5],
-        price: [0, 50000],
-        location: new Set([])
-    });
+        projectType: preferences.projectType,
+        roofType: preferences.roofType,
+        solarScore: preferences.solarScore,
+        price: preferences.price,
+        location: preferences.location
+    })
 
     return (
         <div
