@@ -19,10 +19,10 @@ const schema = a.schema({
             favoritedBy: a.hasMany("FavoriteListing", "listingId"),
         }
     ).authorization(allow => [
-        allow.owner().identityClaim("sub"),
-        allow.groups(["Admin"]),
-        allow.authenticated().to(["read"]),
-        allow.guest(),
+        allow.owner().identityClaim("sub").to(["read", "update", "delete"]),
+        allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
+        allow.authenticated().to(["read", "create"]), // Matches guest permissions
+        allow.guest().to(["read", "create"]),
     ]),
     User: a.model({
         id: a.id().required(),
@@ -50,6 +50,6 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
     schema,
     authorizationModes: {
-        defaultAuthorizationMode: "identityPool",
+        defaultAuthorizationMode: "userPool",
     },
 });

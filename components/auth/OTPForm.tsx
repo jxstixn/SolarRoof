@@ -3,6 +3,7 @@ import {useState} from "react";
 import {Input} from "@nextui-org/react";
 import SubmitButton from "@/components/auth/SubmitButton";
 import {confirmSignUp} from 'aws-amplify/auth';
+import {autoSignIn} from "@aws-amplify/auth";
 
 interface OTPFormProps {
     username: string
@@ -39,9 +40,12 @@ function OTPForm({username, setNextStep}: OTPFormProps) {
         try {
             await confirmSignUp({
                 username: username,
-                confirmationCode: otp
+                confirmationCode: otp,
             })
-            setNextStep("COMPLETE_AUTO_SIGN_IN")
+
+            const {nextStep} = await autoSignIn()
+
+            setNextStep(nextStep.signInStep)
         } catch (e) {
             console.error(e)
             setInvalid(true)

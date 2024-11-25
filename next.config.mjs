@@ -4,7 +4,7 @@ const nextConfig = {
         remotePatterns: [
             {
                 protocol: 'https',
-                hostname: 'amplify-solarroof-justi-s-projectdrivebucket676324-5j6jbqrjcmsi.s3.eu-central-1.amazonaws.com',
+                hostname: 'amplify-solarroof-justi-s-projectdrivebucket676324-tauhktutk6l2.s3.eu-central-1.amazonaws.com',
                 port: '',
                 pathname: '/**',
             },

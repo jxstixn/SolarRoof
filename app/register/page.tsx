@@ -3,6 +3,7 @@ import RegisterForm from "@/components/auth/RegisterForm";
 import {useEffect, useState} from "react";
 import OTPForm from "@/components/auth/OTPForm";
 import {useRouter} from "next/navigation";
+import Loader from "@/components/Loader";
 
 function Page() {
     const router = useRouter()
@@ -14,17 +15,19 @@ function Page() {
         | "RESET_PASSWORD" | "DONE" | "COMPLETE_AUTO_SIGN_IN">()
 
     useEffect(() => {
-        if (nextStep === "COMPLETE_AUTO_SIGN_IN" || nextStep === "DONE") {
-            // Redirect to the dashboard
+        if (nextStep === "DONE") {
             router.push('/dashboard')
         }
     }, [nextStep, router]);
 
-    return (
-        nextStep === "CONFIRM_SIGN_UP"
-            ? <OTPForm username={username} setNextStep={setNextStep}/>
-            : <RegisterForm setUsername={setUsername} setNextStep={setNextStep}/>
-    )
+    switch (nextStep) {
+        case undefined:
+            return <RegisterForm setUsername={setUsername} setNextStep={setNextStep}/>
+        case "CONFIRM_SIGN_UP":
+            return <OTPForm username={username} setNextStep={setNextStep}/>
+        default:
+            return <Loader className={"shadow-md"}/>
+    }
 }
 
 export default Page

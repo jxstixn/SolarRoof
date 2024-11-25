@@ -1,7 +1,7 @@
 "use client"
 import MarketListing from "@/components/marketplace/MarketListing";
 import ProjectType from "@/components/marketplace/ProjectType";
-import React, {useMemo, useState} from "react";
+import React, {useMemo, useState, useEffect, useCallback} from "react";
 import RoofType from "@/components/marketplace/RoofType";
 import {
     Button,
@@ -15,15 +15,31 @@ import {
     Slider, useDisclosure
 } from "@nextui-org/react";
 import Location from "@/components/marketplace/Location";
-
+import {generateClient} from "@aws-amplify/api";
 import {Schema} from "@/amplify/data/resource";
 type Listing = Schema["Listing"]["type"];
 
-interface MarketplaceProps {
-    listings: Listing[];
-}
+const client = generateClient<Schema>();
 
-function Marketplace({listings}: MarketplaceProps) {
+function Marketplace() {
+    // const [loading, setLoading] = useState(true);
+    const [listings, setListings] = useState<Listing[]>([]);
+
+    const fetchListings = useCallback(async () => {
+        const {data: listings, errors}= await client.models.Listing.list();
+        if (errors) {
+            console.error("Error fetching listings:", errors);
+            return [];
+        }
+        return listings;
+    }, []);
+
+    useEffect(() => {
+        fetchListings()
+            .then(setListings)
+            // .finally(() => setLoading(false));
+    }, [fetchListings]);
+
     const [filters, setFilters] = useState<{
         projectType: string[],
         roofType: string[],

@@ -25,8 +25,8 @@ export async function middleware(request: NextRequest) {
         }
     });
 
-    if (authenticated && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/auth")) {
-        return NextResponse.redirect(new URL("/", request.url));
+    if (authenticated && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/register")) {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
     if (!authenticated && request.nextUrl.pathname === "/dashboard") {

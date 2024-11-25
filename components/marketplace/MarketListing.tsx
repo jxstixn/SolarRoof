@@ -53,7 +53,7 @@ function MarketListing({className, listing}: MarketListingProps) {
 
     return (
         <div
-            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 shadow-xl gap-3 transform-all hover:scale-105 duration-300 " + className}>
+            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 drop-shadow-md gap-3 transform-all hover:scale-105 duration-300 " + className}>
             <div className={"relative max-w-full w-full max-h-64 h-48"}>
                 <Image
                     className={"rounded-2xl shadow-md object-center object-cover"}
