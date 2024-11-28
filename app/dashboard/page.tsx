@@ -8,11 +8,11 @@ import InitialSetup from "@/components/dashboard/InitialSetup";
 
 async function Page() {
     const session = await FetchAuthSessionServer()
-    const user = session?.tokens?.idToken?.payload["given_name"] as string
+    const userName = session?.tokens?.idToken?.payload["given_name"] as string
     const userSub = session?.userSub
     const userEmail = session?.tokens?.idToken?.payload["email"] as string
 
-    if (!user || !userSub || !userEmail) redirect("/login")
+    if (!userName || !userSub || !userEmail) redirect("/login")
 
     const date = new Date()
 
@@ -44,12 +44,12 @@ async function Page() {
                                 })}
                             </p>
                             <h1 className={"text-4xl text-zinc-800 font-semibold animate-fade-in-up"}>
-                                Welcome back, {user}!
+                                Welcome back, {userName}!
                             </h1>
                         </div>
                         <div className={"flex flex-row flex-wrap w-full justify-evenly xl:justify-between gap-4"}>
                             <Statistics/>
-                            <Preferences preferences={JSON.parse(userData.preferences as string)}/>
+                            <Preferences preferences={JSON.parse(userData.preferences as string)} userId={userSub}/>
                             <Chats/>
                         </div>
                         <div className={"flex flex-row w-full gap-4 pb-4"}>

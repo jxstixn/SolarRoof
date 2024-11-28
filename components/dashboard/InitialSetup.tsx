@@ -19,7 +19,7 @@ function InitialSetup({sub, email}: InitialSetupProps) {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [step, setStep] = useState<"ROLE" | "PREFERENCES" | "DONE">("ROLE");
-    const [role, setRole] = useState<SharedSelection>(new Set([]));
+    const [role, setRole] = useState<"Investor" | "Lister">("Investor");
 
     async function submitUser(preferences: {
         projectType: string[],
@@ -34,7 +34,7 @@ function InitialSetup({sub, email}: InitialSetupProps) {
         const user = {
             id: sub,
             email: email,
-            role: role.currentKey as "Investor" | "Lister",
+            role: role,
             preferences: JSON.stringify({
                 projectType: preferences.projectType,
                 roofType: preferences.roofType,

@@ -8,7 +8,7 @@ import SubmitButton from "@/components/auth/SubmitButton";
 
 interface PreferencesFormProps {
     loading: boolean,
-    role: SharedSelection,
+    role: "Investor" | "Lister",
     submitUser: (preferences: {
         projectType: string[],
         roofType: string[],
@@ -33,7 +33,7 @@ function PreferencesForm({loading, role, submitUser}: PreferencesFormProps) {
         location: new Set([])
     });
 
-    switch (role.currentKey) {
+    switch (role) {
         case "Investor":
             return (
                 <form action={() => {
@@ -42,10 +42,10 @@ function PreferencesForm({loading, role, submitUser}: PreferencesFormProps) {
                       className="flex flex-col w-full h-full max-h-full items-center justify-center text-zinc-800 text-md overflow-hidden p-8 animate-fade-in-up">
                     <div className={"flex flex-col bg-white w-full sm:w-96 rounded-3xl p-4 gap-4 shadow-md"}>
                         <div className={"flex flex-col"}>
-                            <h1 className={"font-bold text-lg"}>{"Let's get you set up!"}</h1>
+                            <h1 className={"font-bold text-lg"}>{"Investor it is!"}</h1>
                             <p className={
                                 "text-sm text-gray-500"
-                            }>{"What are you interested in?"}</p>
+                            }>{"Please enter your preferences now"}</p>
                         </div>
                         <div className={"flex flex-col w-full gap-4"}>
                             <div className={"flex flex-row w-full justify-between"}>

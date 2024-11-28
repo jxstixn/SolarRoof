@@ -1,25 +1,21 @@
 "use client"
-import {useState} from "react";
-import {Select, SelectItem, SharedSelection} from "@nextui-org/react";
 import SubmitButton from "@/components/auth/SubmitButton";
+import Image from "next/image";
 
 interface RoleFormProps {
     loading: boolean,
     setLoading: (loading: boolean) => void,
-    role: SharedSelection,
-    setRole: (role: SharedSelection) => void,
+    role: "Investor" | "Lister",
+    setRole: (role: "Investor" | "Lister") => void,
     setStep: (step: "ROLE" | "PREFERENCES" | "DONE") => void
 }
 
 function RoleForm({loading, setLoading, role, setRole, setStep}: RoleFormProps) {
-    const [invalid, setInvalid] = useState<boolean>(false)
-
     async function submitRole() {
         setLoading(true)
 
-        if (!role.currentKey) {
+        if (!role) {
             setLoading(false)
-            setInvalid(true)
             return
         }
 
@@ -38,36 +34,52 @@ function RoleForm({loading, setLoading, role, setRole, setStep}: RoleFormProps) 
                         "text-sm text-gray-500"
                     }>{"What are you interested in?"}</p>
                 </div>
-                <Select
-                    id={"role"}
-                    name={"role"}
-                    label={"Role"}
-                    placeholder={"Select Role"}
-                    className={"w-full"}
-                    selectionMode={"single"}
-                    selectedKeys={role}
-                    onChange={() => setInvalid(false)}
-                    onSelectionChange={setRole}
-                    disallowEmptySelection
-                    isInvalid={invalid}
-                    errorMessage={invalid && "Please select a role to continue"}
-                    description={
-                        role.currentKey?.includes("Investor")
-                            ? "The investor role allows you to visit our marketplace, get personal recommendations, and invest in solar projects."
-                            : role.currentKey?.includes("Lister")
-                                ? "The lister role allows you to list your solar projects on our marketplace and get them funded by investors."
-                                : "Select a role to continue"
-                }
-                >
-                    <SelectItem key={"Investor"} value={"investor"}>Investor</SelectItem>
-                    <SelectItem key={"Lister"} value={"lister"}>Lister</SelectItem>
-                </Select>
-                {/*{role.currentKey?.includes("investor") && (<p className={"text-sm text-gray-500"}>*/}
-                {/*    {"The investor role allows you to visit our marketplace, get personal recommendations, and invest in solar projects."}*/}
-                {/*</p>)}*/}
-                {/*{role.currentKey?.includes("lister") && (<p className={"text-sm text-gray-500"}>*/}
-                {/*    {"The lister role allows you to list your solar projects on our marketplace and get them funded by investors."}*/}
-                {/*</p>)}*/}
+                <div className={"flex flex-row gap-8 p-4"}>
+                    <div className={"flex flex-col w-full bg-white rounded-lg gap-2 cursor-pointer"}
+                         onClick={() => setRole("Investor")}>
+                        <Image
+                            src={"/images/investorLogo.webp"}
+                            alt={"Investor"}
+                            className={"h-36 w-full object-cover rounded-lg shadow-md transition-all transform "
+                                + (role === "Investor" && "border-3 border-primary scale-105")
+                            } width={1000} height={1000}/>
+                        <p className={"text-center"}>{"Investing"}</p>
+                    </div>
+                    <div className={"flex flex-col w-full bg-white rounded-lg gap-2 cursor-pointer"}
+                         onClick={() => setRole("Lister")}>
+                        <Image
+                            src={"/images/listerLogo.webp"}
+                            alt={"Lister"}
+                            className={"h-36 w-full object-cover rounded-lg shadow-md transition-all transform "
+                                + (role === "Lister" && "border-3 border-primary scale-105")
+                            } width={1000} height={1000}/>
+                        <p className={"text-center"}>{"Listing"}</p>
+                    </div>
+                </div>
+                {/*<Select*/}
+                {/*    id={"role"}*/}
+                {/*    name={"role"}*/}
+                {/*    label={"Role"}*/}
+                {/*    placeholder={"Select Role"}*/}
+                {/*    className={"w-full"}*/}
+                {/*    selectionMode={"single"}*/}
+                {/*    selectedKeys={role}*/}
+                {/*    onChange={() => setInvalid(false)}*/}
+                {/*    onSelectionChange={setRole}*/}
+                {/*    disallowEmptySelection*/}
+                {/*    isInvalid={invalid}*/}
+                {/*    errorMessage={invalid && "Please select a role to continue"}*/}
+                {/*    description={*/}
+                {/*        role.currentKey?.includes("Investor")*/}
+                {/*            ? "The investor role allows you to visit our marketplace, get personal recommendations, and invest in solar projects."*/}
+                {/*            : role.currentKey?.includes("Lister")*/}
+                {/*                ? "The lister role allows you to list your solar projects on our marketplace and get them funded by investors."*/}
+                {/*                : "Select a role to continue"*/}
+                {/*}*/}
+                {/*>*/}
+                {/*    <SelectItem key={"Investor"} value={"investor"}>Investor</SelectItem>*/}
+                {/*    <SelectItem key={"Lister"} value={"lister"}>Lister</SelectItem>*/}
+                {/*</Select>*/}
                 <SubmitButton name={"Submit"} loading={loading}/>
             </div>
         </form>
