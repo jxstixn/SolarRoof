@@ -1,7 +1,7 @@
 "use client"
 import MarketListing from "@/components/marketplace/MarketListing";
 import ProjectType from "@/components/marketplace/ProjectType";
-import React, {useMemo, useState, useEffect, useCallback} from "react";
+import React, {useMemo, useState, useEffect} from "react";
 import RoofType from "@/components/marketplace/RoofType";
 import {
     Button,
@@ -15,30 +15,24 @@ import {
     Slider, useDisclosure
 } from "@nextui-org/react";
 import Location from "@/components/marketplace/Location";
-import {generateClient} from "@aws-amplify/api";
-import {Schema} from "@/amplify/data/resource";
-type Listing = Schema["Listing"]["type"];
+import {fetchListings} from "@/actions/zod/listings";
 
-const client = generateClient<Schema>();
+import {Schema} from "@/amplify/data/resource";
+import type {SelectionSet} from 'aws-amplify/data';
+import Loader from "@/components/Loader";
+
+const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 function Marketplace() {
-    // const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [listings, setListings] = useState<Listing[]>([]);
-
-    const fetchListings = useCallback(async () => {
-        const {data: listings, errors}= await client.models.Listing.list();
-        if (errors) {
-            console.error("Error fetching listings:", errors);
-            return [];
-        }
-        return listings;
-    }, []);
 
     useEffect(() => {
         fetchListings()
             .then(setListings)
-            // .finally(() => setLoading(false));
-    }, [fetchListings]);
+            .finally(() => setLoading(false));
+    }, []);
 
     const [filters, setFilters] = useState<{
         projectType: string[],
@@ -150,13 +144,16 @@ function Marketplace() {
                     </div>
                 </div>
             </div>
-            <ScrollShadow className={"flex flex-row flex-wrap gap-4 w-full h-full py-4 px-8 overflow-auto"}>
+            {loading ? <div className={"flex flex-row w-full h-full justify-center items-center"}>
+                <Loader/>
+            </div> : <ScrollShadow className={"flex flex-row flex-wrap gap-4 w-full h-full py-4 px-8 overflow-auto"}>
                 {filteredListings.map((listing, index) => (
                     <div className={"w-full sm:w-80 animate-fade-in-up"} key={index}>
                         <MarketListing listing={listing}/>
                     </div>
                 ))}
             </ScrollShadow>
+            }
 
             <Modal
                 isOpen={isOpen}

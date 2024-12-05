@@ -70,15 +70,6 @@ export default function Nav() {
                     </span>
                 </NavbarItem>
                 <NavbarItem className="hidden lg:flex relative group">
-                    <Link href={"/contact"}>
-                        Contact
-                    </Link>
-                    <span
-                        className={"absolute left-0 bottom-0 w-0 h-[1px] bg-zinc-800 transition-all duration-300 group-hover:w-full" +
-                            (path === "/contact" ? " w-full" : "")}>
-                    </span>
-                </NavbarItem>
-                <NavbarItem className="hidden lg:flex relative group">
                     {user ?
                         <Dropdown placement="bottom">
                             <DropdownTrigger>
@@ -126,11 +117,6 @@ export default function Nav() {
                 <NavbarMenuItem key={"Marketplace"} isActive={path === "/marketplace"}>
                     <NextLink href={"/marketplace"} className={"text-black text-xl"}>
                         Marketplace
-                    </NextLink>
-                </NavbarMenuItem>
-                <NavbarMenuItem key={"Contact"} isActive={path === "/contact"}>
-                    <NextLink href={"/contact"} className={"text-black text-xl"}>
-                        Contact
                     </NextLink>
                 </NavbarMenuItem>
                 <Divider className={"bg-transparent p-2"}/>

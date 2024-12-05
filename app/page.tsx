@@ -67,7 +67,7 @@ export default function Home() {
                     <br/>
                     Rent it out and start earning money today!
                 </p>
-                <Link href={"/contact"}
+                <Link href={"/register"}
                       className={"rounded-full font-semibold mt-6 w-36 h-12 bg-[#0e4155] hover:bg-[#9efcf1] text-[#9efcf1] " +
                           "hover:text-[#0e4155] flex items-center justify-center transition-all duration-300 " +
                           "hover:transform hover:scale-105 text-lg shadow-md"}>

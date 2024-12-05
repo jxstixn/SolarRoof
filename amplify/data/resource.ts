@@ -2,7 +2,7 @@ import {type ClientSchema, a, defineData} from '@aws-amplify/backend';
 
 const schema = a.schema({
     Listing: a.model({
-            name: a.string().required(),
+            title: a.string().required(),
             description: a.string(),
             country: a.string().required(),
             street: a.string().required(),
@@ -14,15 +14,14 @@ const schema = a.schema({
             price: a.integer(),
             images: a.string().array(),
             verified: a.boolean().default(false),
+            ownerId: a.id().required(),
             user: a.belongsTo("User", "ownerId"),
-            ownerId: a.id(),
             favoritedBy: a.hasMany("FavoriteListing", "listingId"),
         }
     ).authorization(allow => [
-        allow.owner().identityClaim("sub").to(["read", "update", "delete"]),
+        allow.ownerDefinedIn("ownerId").identityClaim("sub"),
         allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
-        allow.authenticated().to(["read", "create"]), // Matches guest permissions
-        allow.guest().to(["read", "create"]),
+        allow.authenticated().to(["read", "create"]),
     ]),
     User: a.model({
         id: a.id().required(),

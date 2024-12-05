@@ -9,7 +9,7 @@ import SubmitButton from "@/components/auth/SubmitButton";
 interface PreferencesFormProps {
     loading: boolean,
     role: "Investor" | "Lister",
-    submitUser: (preferences: {
+    submitUser: (preferences?: {
         projectType: string[],
         roofType: string[],
         solarScore: number[]

@@ -1,29 +1,25 @@
 "use client"
 import {ScrollShadow} from "@nextui-org/react";
-import {Schema} from "@/amplify/data/resource";
-import {generateClient} from "@aws-amplify/api";
 import MarketListing from "@/components/marketplace/MarketListing";
-import {useEffect, useState, useCallback} from "react";
+import {useEffect, useState} from "react";
 import Loader from "@/components/Loader";
+import {fetchListings} from "@/actions/zod/listings";
 
-type Listing = Schema["Listing"]["type"];
+import {Schema} from "@/amplify/data/resource";
+import type {SelectionSet} from 'aws-amplify/data';
 
-const client = generateClient<Schema>();
+const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 function Recommendations() {
     const [loading, setLoading] = useState(true);
     const [listings, setListings] = useState<Listing[]>([]);
 
-    const fetchListings = useCallback(async () => {
-        const {data: listings} = await client.models.Listing.list();
-        return listings.sort(() => Math.random() - 0.5)
-    }, []);
-
     useEffect(() => {
         fetchListings()
             .then(setListings)
             .finally(() => setLoading(false));
-    }, [fetchListings]);
+    }, []);
 
     return (
         <div

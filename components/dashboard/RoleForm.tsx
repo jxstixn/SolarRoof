@@ -1,16 +1,24 @@
 "use client"
 import SubmitButton from "@/components/auth/SubmitButton";
 import Image from "next/image";
+import {SharedSelection} from "@nextui-org/react";
 
 interface RoleFormProps {
     loading: boolean,
     setLoading: (loading: boolean) => void,
     role: "Investor" | "Lister",
     setRole: (role: "Investor" | "Lister") => void,
-    setStep: (step: "ROLE" | "PREFERENCES" | "DONE") => void
+    setStep: (step: "ROLE" | "PREFERENCES" | "DONE") => void,
+    submitUser: (preferences?: {
+        projectType: string[],
+        roofType: string[],
+        solarScore: number[]
+        price: number[]
+        location: SharedSelection
+    }) => void
 }
 
-function RoleForm({loading, setLoading, role, setRole, setStep}: RoleFormProps) {
+function RoleForm({loading, setLoading, role, setRole, setStep, submitUser}: RoleFormProps) {
     async function submitRole() {
         setLoading(true)
 
@@ -20,7 +28,14 @@ function RoleForm({loading, setLoading, role, setRole, setStep}: RoleFormProps) 
         }
 
         // Set the next step
-        setStep("PREFERENCES")
+        switch (role) {
+            case "Investor":
+                setStep("PREFERENCES")
+                break
+            case "Lister":
+                submitUser();
+                break
+        }
         setLoading(false)
     }
 
@@ -56,30 +71,6 @@ function RoleForm({loading, setLoading, role, setRole, setStep}: RoleFormProps) 
                         <p className={"text-center"}>{"Listing"}</p>
                     </div>
                 </div>
-                {/*<Select*/}
-                {/*    id={"role"}*/}
-                {/*    name={"role"}*/}
-                {/*    label={"Role"}*/}
-                {/*    placeholder={"Select Role"}*/}
-                {/*    className={"w-full"}*/}
-                {/*    selectionMode={"single"}*/}
-                {/*    selectedKeys={role}*/}
-                {/*    onChange={() => setInvalid(false)}*/}
-                {/*    onSelectionChange={setRole}*/}
-                {/*    disallowEmptySelection*/}
-                {/*    isInvalid={invalid}*/}
-                {/*    errorMessage={invalid && "Please select a role to continue"}*/}
-                {/*    description={*/}
-                {/*        role.currentKey?.includes("Investor")*/}
-                {/*            ? "The investor role allows you to visit our marketplace, get personal recommendations, and invest in solar projects."*/}
-                {/*            : role.currentKey?.includes("Lister")*/}
-                {/*                ? "The lister role allows you to list your solar projects on our marketplace and get them funded by investors."*/}
-                {/*                : "Select a role to continue"*/}
-                {/*}*/}
-                {/*>*/}
-                {/*    <SelectItem key={"Investor"} value={"investor"}>Investor</SelectItem>*/}
-                {/*    <SelectItem key={"Lister"} value={"lister"}>Lister</SelectItem>*/}
-                {/*</Select>*/}
                 <SubmitButton name={"Submit"} loading={loading}/>
             </div>
         </form>

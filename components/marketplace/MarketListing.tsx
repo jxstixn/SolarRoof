@@ -1,11 +1,11 @@
 import Image from "next/image";
-import {getUrl} from 'aws-amplify/storage';
-import {useEffect, useState} from "react";
-
-import {Schema} from "@/amplify/data/resource";
 import LocationIcon from "@/components/icons/LocationIcon";
 
-type Listing = Schema["Listing"]["type"];
+import {Schema} from "@/amplify/data/resource";
+import type {SelectionSet} from 'aws-amplify/data';
+
+const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 interface MarketListingProps {
     className?: string;
@@ -13,18 +13,6 @@ interface MarketListingProps {
 }
 
 function MarketListing({className, listing}: MarketListingProps) {
-    const [imageSrc, setImageSrc] = useState<string>();
-
-    useEffect(() => {
-        const fetchImageSrc = async () => {
-            if (listing.images?.[0]) {
-                const imageUrl = await getUrl({path: listing.images?.[0]});
-                setImageSrc(imageUrl.url.toString());
-            }
-        }
-        fetchImageSrc().then()
-    }, [listing.images]);
-
     function computeSolarScoreColor() {
         // rank them from 1 to 5 with 1 being the worst and 5 being the best
         // this should look like a progress bar with 5 different colors
@@ -53,16 +41,16 @@ function MarketListing({className, listing}: MarketListingProps) {
 
     return (
         <div
-            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 drop-shadow-md gap-3 transform-all hover:scale-105 duration-300 " + className}>
+            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 drop-shadow-md gap-3 transform-all hover:scale-105 duration-300 cursor-pointer " + className}>
             <div className={"relative max-w-full w-full max-h-64 h-48"}>
                 <Image
                     className={"rounded-2xl shadow-md object-center object-cover"}
-                    src={imageSrc || "/CameraIcon.svg"}
+                    src={listing.images ? listing.images[0] as string : "/CameraIcon.svg"}
                     alt={"Market Listing"}
                     fill
                 />
             </div>
-            <h1 className={"text-xl font-bold"}>{listing.name}</h1>
+            <h1 className={"text-xl font-bold"}>{listing.title}</h1>
             <div className={"flex flex-row h-4 gap-1 items-center"}>
                 <LocationIcon className={"w-4 h-4"}/>
                 <p className={"text-sm font-normal"}>{listing.city}, {listing.country}</p>

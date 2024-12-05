@@ -5,6 +5,7 @@ import Chats from "@/components/dashboard/Chats";
 import Recommendations from "@/components/dashboard/Recommendations";
 import {redirect} from "next/navigation";
 import InitialSetup from "@/components/dashboard/InitialSetup";
+import MyListings from "@/components/dashboard/MyListings";
 
 async function Page() {
     const session = await FetchAuthSessionServer()
@@ -49,7 +50,8 @@ async function Page() {
                         </div>
                         <div className={"flex flex-row flex-wrap w-full justify-evenly xl:justify-between gap-4"}>
                             <Statistics/>
-                            <Preferences preferences={JSON.parse(userData.preferences as string)} userId={userSub}/>
+                            {userData.role === "Investor" && <Preferences preferences={JSON.parse(userData.preferences as string)} userId={userSub}/>}
+                            {userData.role === "Lister" && <MyListings/>}
                             <Chats/>
                         </div>
                         <div className={"flex flex-row w-full gap-4 pb-4"}>

@@ -21,7 +21,7 @@ function InitialSetup({sub, email}: InitialSetupProps) {
     const [step, setStep] = useState<"ROLE" | "PREFERENCES" | "DONE">("ROLE");
     const [role, setRole] = useState<"Investor" | "Lister">("Investor");
 
-    async function submitUser(preferences: {
+    async function submitUser(preferences?: {
         projectType: string[],
         roofType: string[],
         solarScore: number[]
@@ -29,19 +29,29 @@ function InitialSetup({sub, email}: InitialSetupProps) {
         location: SharedSelection
     }) {
         setLoading(true)
-        const locations = Array.from(preferences.location).map((location) => location)
+        let user;
 
-        const user = {
-            id: sub,
-            email: email,
-            role: role,
-            preferences: JSON.stringify({
-                projectType: preferences.projectType,
-                roofType: preferences.roofType,
-                solarScore: preferences.solarScore,
-                price: preferences.price,
-                location: locations
-            })
+        if (preferences) {
+            const locations = Array.from(preferences.location).map((location) => location)
+
+            user = {
+                id: sub,
+                email: email,
+                role: role,
+                preferences: JSON.stringify({
+                    projectType: preferences.projectType,
+                    roofType: preferences.roofType,
+                    solarScore: preferences.solarScore,
+                    price: preferences.price,
+                    location: locations
+                })
+            }
+        } else {
+            user = {
+                id: sub,
+                email: email,
+                role: role
+            }
         }
 
         await client.models.User.create(user)
@@ -60,6 +70,7 @@ function InitialSetup({sub, email}: InitialSetupProps) {
                     role={role}
                     setRole={setRole}
                     setStep={setStep}
+                    submitUser={submitUser}
                 />
             )
         case "PREFERENCES":
