@@ -20,9 +20,11 @@ const listingSchema = z.object({
 });
 
 export async function fetchListings(): Promise<Listing[]> {
+    const user = await AuthGetCurrentUserServer();
+
     const {data: listings} = await cookiesClient.models.Listing.list({
         selectionSet: selectionSet,
-        authMode: "iam"
+        authMode: user ? "userPool" : "iam"
     });
 
     const listingsWithImages = await Promise.all(listings.map(fetchListingWithImage));
