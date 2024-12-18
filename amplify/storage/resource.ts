@@ -5,6 +5,7 @@ export const storage = defineStorage({
     access: (allow) => ({
         'listings/*': [
             allow.authenticated.to(["read", "write"]),
+            allow.guest.to(["read"]),
         ],
     }),
 });

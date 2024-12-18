@@ -1,0 +1,21 @@
+.embla {
+    margin: auto;
+    --slide-height: 24rem;
+    --slide-spacing: 1rem;
+    --slide-size: 70%;
+}
+
+@media (min-width: 640px) {
+    .embla {
+        --slide-height: 19rem;
+        --slide-spacing: 1rem;
+        --slide-size: 50%;
+    }
+}
+
+.embla__slide {
+    transform: translate3d(0, 0, 0);
+    flex: 0 0 var(--slide-size);
+    min-width: 0;
+    padding-left: var(--slide-spacing);
+}

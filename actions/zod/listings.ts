@@ -1,10 +1,10 @@
 "use server"
 import {z} from "zod";
-import {AuthGetCurrentUserServer, cookiesClient, StorageGetUrlServer} from "@/utils/amplify-utils";
+import {AuthGetCurrentUserServer, cookiesClient, StorageGetUrlServer, StorageRemoveServer} from "@/utils/amplify-utils";
 import {Schema} from "@/amplify/data/resource";
 import type {SelectionSet} from 'aws-amplify/data';
 
-const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+const selectionSet = ['id', 'title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
 type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 const listingSchema = z.object({
@@ -22,23 +22,51 @@ const listingSchema = z.object({
 export async function fetchListings(): Promise<Listing[]> {
     const {data: listings} = await cookiesClient.models.Listing.list({
         selectionSet: selectionSet,
+        authMode: "iam"
     });
 
-    // Fetch all URLs for images
-    const imageUrls = await Promise.all(listings.map(async listing => {
-        if (listing.images?.[0]) {
-            return await StorageGetUrlServer(listing.images?.[0]);
-        }
-        return null;
+    const listingsWithImages = await Promise.all(listings.map(fetchListingWithImage));
+
+    return listingsWithImages.sort((a, b) => a.title.localeCompare(b.title));
+}
+
+export async function fetchListingsWithoutMatches(): Promise<Listing[]> {
+    const user = await AuthGetCurrentUserServer();
+
+    if (!user) {
+        return [];
+    }
+
+    const {data: listings} = await cookiesClient.models.Listing.list({
+        selectionSet: selectionSet,
+    });
+
+    // Fetch pending matches
+    const {data: matches} = await cookiesClient.models.Matches.list({
+        selectionSet: ['id', 'listingId'] as const,
+        filter: {status: {eq: "Pending"}},
+    });
+
+    const listingsWithoutMatches = listings.filter(listing => {
+        return !matches.some(match => match.listingId === listing.id);
+    });
+
+    const listingsWithImages = await Promise.all(listingsWithoutMatches.map(fetchListingWithImage));
+
+    return listingsWithImages.sort((a, b) => a.title.localeCompare(b.title));
+}
+
+export async function fetchListingWithImage(listing: Listing): Promise<Listing> {
+    if (!listing.images) return listing;
+
+    const imageUrls = await Promise.all(listing.images.map(async image => {
+        if (!image) return null
+        const url = await StorageGetUrlServer(image);
+        if (!url) return null
+        return url.url.toString();
     }));
 
-    // Assign image URLs to listings
-    return listings.map((listing, index) => {
-        if (!imageUrls[index]) {
-            return listing;
-        }
-        return {...listing, images: [imageUrls[index].url.toString()]};
-    }).sort((a, b) => a.title.localeCompare(b.title));
+    return {...listing, images: imageUrls};
 }
 
 export async function fetchMyListings(): Promise<Listing[]> {
@@ -48,28 +76,16 @@ export async function fetchMyListings(): Promise<Listing[]> {
         filter: {ownerId: {eq: user!.userId}}
     });
 
-    // Fetch all URLs for images
-    const imageUrls = await Promise.all(listings.map(async listing => {
-        if (listing.images?.[0]) {
-            return await StorageGetUrlServer(listing.images?.[0]);
-        }
-        return null;
-    }));
+    const listingsWithImages = await Promise.all(listings.map(fetchListingWithImage));
 
-    // Assign image URLs to listings
-    return listings.map((listing, index) => {
-        if (!imageUrls[index]) {
-            return listing;
-        }
-        return {...listing, images: [imageUrls[index].url.toString()]};
-    }).sort((a, b) => a.title.localeCompare(b.title));
+    return listingsWithImages.sort((a, b) => a.title.localeCompare(b.title));
 }
 
 export async function createListing(formData: FormData) {
     const user = await AuthGetCurrentUserServer();
 
     if (!user) {
-        return {error: "User not found", success: false};
+        return {error: {error: "User not found"}, success: false};
     }
 
     formData.append("ownerId", user!.userId);
@@ -77,7 +93,7 @@ export async function createListing(formData: FormData) {
     const {data: listing, error, success} = listingSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (error || !success) {
-        return {error: error, success: success};
+        return {error: error.flatten().fieldErrors, success: success};
     }
 
     const {data, errors} = await cookiesClient.models.Listing.create({
@@ -88,10 +104,37 @@ export async function createListing(formData: FormData) {
     });
 
     if (errors) {
-        return {error: errors, success: false};
+        return {error: {error: errors.toString()}, success: false};
     }
 
     return {listingId: data?.id, success: true};
+}
+
+export async function updateListing(listingId: string, formData: FormData) {
+    const user = await AuthGetCurrentUserServer();
+
+    if (!user) {
+        return {error: {error: "User not found"}, success: false};
+    }
+
+    formData.append("ownerId", user!.userId);
+
+    const {data: listing, error, success} = listingSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (error || !success) {
+        return {error: error.flatten().fieldErrors, success: success};
+    }
+
+    const {errors} = await cookiesClient.models.Listing.update({
+        id: listingId,
+        ...listing,
+    });
+
+    if (errors) {
+        return {error: {error: errors.toString()}, success: false};
+    }
+
+    return {listingId: listingId, success: true};
 }
 
 export async function updateListingImages(listingId: string, images: string[]) {
@@ -99,6 +142,28 @@ export async function updateListingImages(listingId: string, images: string[]) {
         id: listingId,
         images,
     });
+
+    if (errors) {
+        return {error: errors, success: false};
+    }
+
+    return {success: true};
+}
+
+export async function deleteListing(listingId: string) {
+    // Delete images from storage
+    const listing = await cookiesClient.models.Listing.get({id: listingId});
+
+    if (listing.data?.images) {
+        await Promise.all(listing.data.images.map(async image => {
+            if (image) {
+                await StorageRemoveServer(image);
+            }
+        }));
+    }
+
+    // Delete listing from database
+    const {errors} = await cookiesClient.models.Listing.delete({id: listingId});
 
     if (errors) {
         return {error: errors, success: false};

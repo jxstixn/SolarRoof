@@ -6,6 +6,8 @@ import Recommendations from "@/components/dashboard/Recommendations";
 import {redirect} from "next/navigation";
 import InitialSetup from "@/components/dashboard/InitialSetup";
 import MyListings from "@/components/dashboard/MyListings";
+import MyMatches from "@/components/dashboard/MyMatches";
+import Matches from "@/components/dashboard/Matches";
 
 async function Page() {
     const session = await FetchAuthSessionServer()
@@ -49,13 +51,15 @@ async function Page() {
                             </h1>
                         </div>
                         <div className={"flex flex-row flex-wrap w-full justify-evenly xl:justify-between gap-4"}>
-                            <Statistics/>
+                            {userData.role === "Investor" &&<Statistics/>}
+                            {userData.role === "Lister" && <Matches role={"Lister"}/>}
                             {userData.role === "Investor" && <Preferences preferences={JSON.parse(userData.preferences as string)} userId={userSub}/>}
-                            {userData.role === "Lister" && <MyListings/>}
+                            {userData.role === "Lister" && <MyMatches/>}
                             <Chats/>
                         </div>
-                        <div className={"flex flex-row w-full gap-4 pb-4"}>
-                            <Recommendations/>
+                        <div className={"flex flex-row w-full gap-4 pb-4 justify-evenly xl:justify-between"}>
+                            {userData.role === "Investor" && <Recommendations preferences={JSON.parse(userData.preferences as string)}/>}
+                            {userData.role === "Lister" && <MyListings/>}
                         </div>
                     </div>
                 </div>

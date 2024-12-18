@@ -4,15 +4,16 @@ import LocationIcon from "@/components/icons/LocationIcon";
 import {Schema} from "@/amplify/data/resource";
 import type {SelectionSet} from 'aws-amplify/data';
 
-const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+const selectionSet = ['id', 'title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
 type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 interface MarketListingProps {
-    className?: string;
+    className?: string,
     listing: Listing,
+    onClick?: () => void
 }
 
-function MarketListing({className, listing}: MarketListingProps) {
+function MarketListing({className, listing, onClick}: MarketListingProps) {
     function computeSolarScoreColor() {
         // rank them from 1 to 5 with 1 being the worst and 5 being the best
         // this should look like a progress bar with 5 different colors
@@ -36,12 +37,11 @@ function MarketListing({className, listing}: MarketListingProps) {
                 })}
             </div>
         )
-
     }
 
     return (
         <div
-            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 drop-shadow-md gap-3 transform-all hover:scale-105 duration-300 cursor-pointer " + className}>
+            className={"flex flex-col bg-white w-full sm:w-80 max-h-[500px] rounded-3xl p-4 drop-shadow-md gap-3 transform-all hover:scale-105 duration-300 cursor-pointer " + className} onClick={onClick}>
             <div className={"relative max-w-full w-full max-h-64 h-48"}>
                 <Image
                     className={"rounded-2xl shadow-md object-center object-cover"}
@@ -55,9 +55,9 @@ function MarketListing({className, listing}: MarketListingProps) {
                 <LocationIcon className={"w-4 h-4"}/>
                 <p className={"text-sm font-normal"}>{listing.city}, {listing.country}</p>
             </div>
-            <p key={"description"} className={"font-normal text-sm"}>
-                {listing.description}
-            </p>
+            {/*<p key={"description"} className={"font-normal text-sm"}>*/}
+            {/*    {listing.description}*/}
+            {/*</p>*/}
             <div className={"flex flex-row gap-1 w-full"}>
                 <span className={"font-semibold text-md w-2/5"}>Solar Score:</span>
                 {computeSolarScoreColor()}

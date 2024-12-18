@@ -63,6 +63,8 @@ function Preferences({preferences, userId}: PreferencesProps) {
 
         setEdited(false)
         setEdit(false)
+
+        window.location.reload()
     }
 
     return (

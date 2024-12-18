@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 
 import ConfigureAmplifyClientSide from "@/components/ConfigureAmplify";
 
-export default function RootLayout({
-                                       children,
-                                   }: Readonly<{
+export default async function RootLayout({
+                                             children,
+                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
@@ -28,7 +28,8 @@ export default function RootLayout({
         <ConfigureAmplifyClientSide/>
         <NextUIProvider>
             <Navbar/>
-            <main className={"max-w-dvw max-h-[calc(100dvh-64px)] lg:max-h-[calc(100dvh-7rem)] flex flex-col w-dvw h-dvh items-center overflow-x-hidden"}>
+            <main
+                className={"max-w-dvw max-h-[calc(100dvh-64px)] lg:max-h-[calc(100dvh-7rem)] flex flex-col w-dvw h-dvh items-center overflow-x-hidden"}>
                 {children}
             </main>
         </NextUIProvider>

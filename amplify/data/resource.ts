@@ -16,30 +16,50 @@ const schema = a.schema({
             verified: a.boolean().default(false),
             ownerId: a.id().required(),
             user: a.belongsTo("User", "ownerId"),
-            favoritedBy: a.hasMany("FavoriteListing", "listingId"),
+            matches: a.hasMany("Matches", "listingId"),
         }
     ).authorization(allow => [
         allow.ownerDefinedIn("ownerId").identityClaim("sub"),
         allow.groups(["Admin"]).to(["read", "create", "update", "delete"]),
         allow.authenticated().to(["read", "create"]),
+        allow.guest().to(["read"]),
     ]),
     User: a.model({
         id: a.id().required(),
         email: a.email().required(),
         role: a.enum(["Investor", "Lister"]),
         preferences: a.json(),
-        favoriteListings: a.hasMany("FavoriteListing", "userId"),
         listings: a.hasMany("Listing", "ownerId"),
+        matchesLister: a.hasMany("Matches", "listerId"),
+        matchesInvestor: a.hasMany("Matches", "investorId"),
+        notifications: a.hasMany("Notification", "userId"),
     }).authorization(allow => [
         allow.ownerDefinedIn("id").identityClaim("sub"),
+        allow.authenticated().to(["read"]),
         allow.groups(["Admin"])
     ]),
-    FavoriteListing: a.model({
+    Matches: a.model({
+        listerId: a.id().required(),
+        investorId: a.id().required(),
         listingId: a.id().required(),
-        userId: a.id().required(),
-        listings: a.belongsTo("Listing", "listingId"),
-        users: a.belongsTo("User", "userId"),
+        lister: a.belongsTo("User", "listerId"),
+        investor: a.belongsTo("User", "investorId"),
+        listing: a.belongsTo("Listing", "listingId"),
+        status: a.enum(["Pending", "Accepted", "Rejected"]),
+        acceptedBy: a.enum(["Lister", "Investor", "Both"]),
+        rejectedBy: a.enum(["Lister", "Investor", "Both"]),
     }).authorization(allow => [
+        allow.ownerDefinedIn("listerId").identityClaim("sub"),
+        allow.ownerDefinedIn("investorId").identityClaim("sub"),
+        allow.groups(["Admin"])
+    ]),
+    Notification: a.model({
+        userId: a.id().required(),
+        type: a.enum(["Match"]),
+        message: a.string(),
+        user: a.belongsTo("User", "userId"),
+    }).authorization(allow => [
+        allow.authenticated().to(["create"]),
         allow.ownerDefinedIn("userId").identityClaim("sub"),
         allow.groups(["Admin"])
     ]),

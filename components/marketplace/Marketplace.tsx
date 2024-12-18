@@ -21,7 +21,7 @@ import {Schema} from "@/amplify/data/resource";
 import type {SelectionSet} from 'aws-amplify/data';
 import Loader from "@/components/Loader";
 
-const selectionSet = ['title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
+const selectionSet = ['id', 'title', 'description', 'country', 'street', 'city', 'postalCode', 'roofType', 'projectType', 'ownerId', 'images', 'price', 'solarScore'] as const;
 type Listing = SelectionSet<Schema['Listing']['type'], typeof selectionSet>;
 
 function Marketplace() {
